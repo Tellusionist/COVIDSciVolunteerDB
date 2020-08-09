@@ -1,7 +1,9 @@
 # # Daily SciDB Limited Access Validator and Emailer #
 # 
 #  - Download the latest Volunteer Response data
+#    - https://docs.google.com/spreadsheets/d/1WrHA3BQKB7-0_EP7SZY1mVWLV0krkkM-6pvv0yHag5o/edit?ts=5e88d0fb#gid=1304812603)
 #  - Download the latest configuration 
+#    - https://docs.google.com/spreadsheets/d/1cFCs3XzvrSKkSdW5elsxxZuPgDheSGUaMUjWvYqCtmU/edit#gid=1042414742
 #  - Check against day frequency for that user if enough time has passed since previous run
 #  - Compare against previous output to see if new volunteers are found, email an updated list
 #    - Don't send an email if someone was removed, but update the last run date
@@ -22,7 +24,7 @@ from json import load as jload
 
 # Create basic logger
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 # define file handler and set formatter
 file_handler = logging.FileHandler('scidb_limited_access.log')
