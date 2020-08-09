@@ -1,4 +1,8 @@
-# COVIDScivVolunteerDB
+# COVIDSciVolunteerDB
+
+Program to send email to local cordinators when there is a new volunteer in their area.
+
+Program website: https://covid19sci.org/
 
   - Download the latest Volunteer Response data
   - Download the latest configuration 
