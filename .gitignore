@@ -1,0 +1,9 @@
+client_secret.json
+local_secret.json
+scidb_limited_access.log
+SciDB_Volunteers_No_PII.csv
+SciDB_Volunteers_PII.csv
+Volunteers_Subset_DB_BAK.txt
+Volunteers_Subset_DB.txt
+__pycache__/
+Backups/
