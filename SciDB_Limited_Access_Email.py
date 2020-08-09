@@ -246,8 +246,8 @@ if creds.access_token_expired:
     creds.login()
 
 logger.debug('Update Google sheet with results')
-#gresults = usr_sheet.update_cells(cell_list)
-#logger.info('Updated %s total cells in Google sheet',gresults['updatedCells'])
+gresults = usr_sheet.update_cells(cell_list)
+logger.info('Updated %s total cells in Google sheet',gresults['updatedCells'])
 
 # make a copy of the DB just in case
 logger.debug('Saving backup copy of the DB')
