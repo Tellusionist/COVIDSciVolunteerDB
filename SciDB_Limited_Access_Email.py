@@ -218,9 +218,12 @@ for index, row in limited_users_df.iterrows():
         # prepare the subset for emailing
         volunteer_ss.drop('Unique ID',axis=1, inplace=True)
         logger.debug('Sending email')
-        email_results(row['Email To Name'], row['Email Addresses'], volunteer_ss,  secrets['GMAIL_PASS'])
-        row['Last Email Sent'] = str(RunDTS)
-        row['Run Notes'] = row['Run Notes'] + str(len(email_diff)) + ' New volunteers found, sent email'
+        try:
+            email_results(row['Email To Name'], row['Email Addresses'], volunteer_ss,  secrets['GMAIL_PASS'])
+            row['Last Email Sent'] = str(RunDTS)
+            row['Run Notes'] = row['Run Notes'] + str(len(email_diff)) + ' New volunteers found, sent email'
+        except Exception as e:
+            logger.exception('Error recieved while sending email')
     elif volunteers_found >0 and len(email_diff) == 0:
         row['Run Notes'] = row['Run Notes'] + 'No new volunteers found'
 
