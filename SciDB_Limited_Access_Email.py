@@ -263,7 +263,10 @@ pii_df = volunteers_df.copy()
 pii_df.drop(index=pii_df[pii_df['Job Title'] == ''].index, inplace=True)
 pii_df['url'] = 'https://covid19sci.org/'
 logger.debug('Update PII data to AWS')
-upload_aws(pii_df, 'SciDB_Volunteers_PII.csv', secrets['AWS_ACCESS_KEY'], secrets['AWS_SECRET_KEY'])
+try:
+    upload_aws(pii_df, 'SciDB_Volunteers_PII.csv', secrets['AWS_ACCESS_KEY'], secrets['AWS_SECRET_KEY'])
+except:
+    logger.debug("Error during PII Upload to AWS - Likely expired token, but not logging exception anymore")
 
 # export non-PII data to AWS
 pii_cols = ['Name','Email Address','Phone Number']
@@ -272,6 +275,9 @@ non_pii_df.drop(columns = pii_cols, inplace=True)
 non_pii_df.drop(index=non_pii_df[non_pii_df['Job Title'] == ''].index, inplace=True)
 non_pii_df['url'] = 'https://covid19sci.org/'
 logger.debug('Update non-PII data to AWS')
-upload_aws(non_pii_df, 'SciDB_Volunteers_No_PII.csv', secrets['AWS_ACCESS_KEY'], secrets['AWS_SECRET_KEY'])
+try:
+    upload_aws(non_pii_df, 'SciDB_Volunteers_No_PII.csv', secrets['AWS_ACCESS_KEY'], secrets['AWS_SECRET_KEY'])
+except:
+    logger.debug("Error during Non-PII Upload to AWS - Likely expired token, but not logging exception anymore")
 
 logger.debug('Progam completed')
