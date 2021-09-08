@@ -223,6 +223,7 @@ for index, row in limited_users_df.iterrows():
             row['Last Email Sent'] = str(RunDTS)
             row['Run Notes'] = row['Run Notes'] + str(len(email_diff)) + ' New volunteers found, sent email'
         except Exception as e:
+            row['Run Notes'] = row['Run Notes'] + 'Error recieved when sending email'
             logger.exception('Error recieved while sending email')
     elif volunteers_found >0 and len(email_diff) == 0:
         row['Run Notes'] = row['Run Notes'] + 'No new volunteers found'
