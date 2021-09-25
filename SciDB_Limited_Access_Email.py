@@ -18,7 +18,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import logging
 from sci_access import get_zips, parse_dts, upload_aws
-from sci_email import email_results
+from sci_email import email_results, heartbeat_email_check
 from json import load as jload
 
 
@@ -43,6 +43,7 @@ scopes = ['https://spreadsheets.google.com/feeds'
 creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scopes)
 logger.debug('Authorizing Google credentials')
 gc = gspread.authorize(creds)
+
 
 # Connection details to Volunteers sheet
 wb = gc.open('COVID-19 Pandemic: Scientist volunteer form (Responses)')
@@ -107,6 +108,12 @@ limited_users_df.to_csv(csv_filename, index=False)
 # Load secrets
 with open('local_secret.json') as f:
     secrets = jload(f)
+
+
+# check how long since last email was sent
+# need to send an email once a week to top Google blocking bot access
+logger.debug('Running heartbeat email check')
+heartbeat_email_check(secrets['GMAIL_PASS'])
 
 logger.debug('Initiating access loop')
 RunDTS = datetime.now()

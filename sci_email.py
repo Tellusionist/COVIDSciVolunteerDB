@@ -4,7 +4,8 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase 
 from email import encoders 
 import os
-import time
+from time import sleep
+from datetime import datetime, timedelta
 
 def email_results(name, email_add, df, epass):
     # save attachements
@@ -77,11 +78,56 @@ def email_results(name, email_add, df, epass):
     try:
         os.remove(csv_filename)
     except PermissionError:
-        time.sleep(5)
+        sleep(5)
         os.remove(csv_filename)
         
     try:
         os.remove(xl_filename)
     except PermissionError:
-        time.sleep(5)
+        sleep(5)
         os.remove(xl_filename)
+
+def heartbeat_email_check(epass):
+    
+    today = datetime.now()
+    email_hb_file = 'last_hb_sent.txt'
+
+    # If file not found, default to last sent 10 days ago to trigger heartbeat
+    if not os.path.exists(email_hb_file):
+        with open(email_hb_file, 'w') as f:
+            adjusted_date = (today - timedelta(days=10)).strftime('%m/%d/%Y')
+            f.write(adjusted_date)
+    
+    # Check when heartbeat was last sent
+    with open(email_hb_file, 'r') as f:
+        last_sent = f.read()
+    last_sent = datetime.strptime(last_sent, '%m/%d/%Y')
+
+    # Don't send heartbeat unless 7 days have passed
+    if today < (last_sent + timedelta(days=7)):
+        return
+
+    # build and send email
+    fromaddr = 'covid19scivolunteers@gmail.com'
+    toaddr = 'covid19scivolunteers@gmail.com'
+
+    msg = MIMEMultipart() 
+    msg['From'] = fromaddr 
+    msg['To'] = toaddr 
+    msg['Subject'] = "NSVD Email Bot Heartbeat"
+    body = 'Heartbeat email to keep Gmail connection live. Please ignore.'
+
+    msg.attach(MIMEText(body, 'html')) 
+    s = smtplib.SMTP('smtp.gmail.com', 587) 
+    s.starttls() 
+    s.login(fromaddr, epass) 
+    text = msg.as_string() 
+    s.sendmail(fromaddr, toaddr, text) 
+    s.quit() 
+    
+    # Update heartbeat file with last sent date
+    with open(email_hb_file, 'w') as f:
+        sent_date = today.strftime('%m/%d/%Y')
+        f.write(sent_date)
+    
+    return
